@@ -1,0 +1,93 @@
+---
+title: "lesson4"
+output: html_document
+---
+
+
+```{r pseudo}
+library(ggplot2)
+pf <- read.csv('pseudo_facebook.tsv', sep='\t')
+qplot(x=age, y=friend_count, data=pf)
+```
+```{r}
+ggplot(aes(x=age,y=friend_count), data=pf) + 
+  geom_point(alpha=1/20, position=position_jitter(h=0)) + 
+  xlim(13,90) +
+  coord_trans(y='sqrt')
+```
+
+
+```{r}
+ggplot(aes(x=age,y=friendships_initiated), data=pf) + 
+  geom_point(alpha=1/20, position=position_jitter(h=0)) + 
+  xlim(13,90) +
+  coord_trans(y='sqrt')
+```
+
+
+```{r}
+install.packages('dplyr')
+library(dplyr)
+```
+
+```{r}
+age_groups <- group_by(pf, age)
+pf.fc_by_age <- summarise(age_groups, 
+          friend_count_mean=mean(friend_count),
+          friend_count_median=median(friend_count),
+          n=n())
+pf.fc_by_age <- arrange(pf.fc_by_age, age)
+
+```
+
+
+```{r}
+ggplot(aes(x=age,y=friend_count_mean), data=pf.fc_by_age) + 
+  geom_line() +
+  xlim(13,85)
+```
+
+
+
+```{r}
+ggplot(aes(x=age,y=friend_count), data=pf) + 
+  geom_point(alpha=0.05, 
+             position=position_jitter(h=0),
+             color='orange') + 
+  coord_cartesian(xlim=c(13,90),ylim=c(0,1000)) +
+  geom_line(stat='summary', fun.y=mean) +
+  geom_line(stat='summary', fun.y=quantile, fun.args=list(probs=.1),linetype=2, color='blue') +
+  geom_line(stat='summary', fun.y=quantile, fun.args=list(probs=.5), color='blue') +
+  geom_line(stat='summary', fun.y=quantile, fun.args=list(probs=.9),linetype=2, color='blue') 
+
+
+cor.test(pf$age, pf$friend_count)
+with(subset(pf, age <=70), cor.test(age, friend_count), method='pearson')
+
+ggplot(aes(x=www_likes_received,y=likes_received), data=pf) + 
+  geom_point() +
+  xlim(0, quantile(pf$www_likes_received, 0.95)) +
+  ylim(0, quantile(pf$likes_received, 0.95)) +
+  geom_smooth(method='lm', color='red')
+...
+
+
+> 
+> 
+> p1 <- ggplot(aes(x=age, y=friend_count_mean), data=subset(pf.fc_by_age, age<71)) + geom_line()
+> p2 <- ggplot(data=subset(pf.fc_by_age_months, age_with_months<71), aes(y=friend_count_mean, x=age_with_months)) +
++     + geom_line()
+Error in +geom_line() : argument incorrect pour un opérateur unitaire
+> p2 <- ggplot(data=subset(pf.fc_by_age_months, age_with_months<71), aes(y=friend_count_mean, x=age_with_months)) + geom_line()
+> library(gridExtra)
+
+Attachement du package : ‘gridExtra’
+
+The following object is masked from ‘package:dplyr’:
+
+    combine
+
+> grid.arrange(p1, p2, ncol=1)
+ggplot(data = diamonds, aes(x = depth, y = price)) + 
+  geom_point(alpha(1/100)
+

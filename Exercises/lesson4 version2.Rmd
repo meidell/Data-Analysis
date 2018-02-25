@@ -1,0 +1,27 @@
+---
+title: "lesson 4 version2"
+author: "Jan Erik Meidell"
+date: "04/06/2017"
+output: html_document
+---
+
+
+```{r}
+install.packages('alr3')
+library(alr3)
+data("Mitchell")
+```
+
+
+```{r}
+pf$age_with_months <- pf$ag + (12-pf$dob_month)/12
+
+pf.fc_by_age_months <- summarise(age_month_groups, 
++                                 friend_count_mean=mean(friend_count),
++                                 friend_count_median=median(friend_count),
++                                 n=n())
+> pf.fc_by_age_months <- arrange(pf.fc_by_age_month, age_with_months)
+```
+
+
+
